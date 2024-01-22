@@ -43,4 +43,4 @@ jobs:
 
       - name: pytest_tests
         run: |
-          python -m pytest test.py
+          python -m pytest ./test.py
