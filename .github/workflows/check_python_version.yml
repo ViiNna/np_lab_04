@@ -1,23 +1,36 @@
+#nazwanie workflow
 name: check_python_version
 
+#sprecyzowanie kiedy ma się wykonać
 on:
   push:
     branches:
       - check_python_version
 
+#jego zadania
 jobs:
   build:
-    
+
+    #sprecyzowanie na jakim systemie operacyjnym ma się wykonać
     runs-on: macos-latest
 
+    #określenie zadań
     steps:
+      #linijka kodu dzięki której workflow widzi plik w repozytorium zdalnym
+      - uses: actions/checkout@v4
+      
+      #set up pythona
       - name: set_up_python
         uses: actions/setup-python@v3
         with: 
           python-version: "3.11"
+
+      #zaktualizowanie PIP
       - name: pip_update
         run: |
           python -m pip install --upgrade pip
+
+      #sprawdzenie wersji pythona dla programu
       - name: python_version
         run: |
           python --version
