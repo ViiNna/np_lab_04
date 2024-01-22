@@ -1,48 +1,64 @@
+#nazwanie workflow
 name: check_syntax
 
+#sprecyzowanie kiedy ma się on wykonać
 on:
   push:
     branches:
       - main
 
+#jego zadanie
 jobs:
   check-syntax:
+    #ustalenie na czym ma się wykonać - warunki sprecyzowane niżej
     runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
+        #sprecyzwoanie na jakich systemach operacyjnych ma się wykonać
         os: [ubuntu-latest, windows-latest]
+        #sprecyzowanie wersji pythona
         python-version: ["3.9", "3.10", "3.11"]
+        #wyłączenie wersji pythona "3.10" dla ubuntu
         exclude:
           - os: ubuntu-latest
             python-version: "3.10"
 
+    #określenie zadań
     steps:
+      #linijka kodu dzięki której workflow widzi pliki w repozytorium zdalnym
       - uses: actions/checkout@v4
-      
+
+      #set up pythona
       - name: set_up_python
         uses: actions/setup-python@v3
         with:
+          #wybrane wersje były sprecyzowane wyżej
           python-version: ${{ matrix.python-version }}
 
+      #zaktualizowanie PIP
       - name: pip_update
         run: |
           python -m pip install --upgrade pip
 
+      #instalacja flake8
       - name: flake8&unittest_install
         run: |
           python -m pip install flake8
           #python -m pip install 
 
+      #sprawdzenie wersji pythona dla programu
       - name: python_version
         run: |
           python --version
           pip --version
 
+      #uruchomienie flake8
       - name: flake8_code_analysis
         run: |
           flake8 .
 
+      #wywołanie unitestów
       - name: unittest_tests
         run: |
           python -m unittest discover -v
